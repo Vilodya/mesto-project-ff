@@ -11,7 +11,7 @@ const modals = document.querySelectorAll('.popup');
 
 const buttonEdit = document.querySelector('.profile__edit-button');
 const buttonNewCard = document.querySelector('.profile__add-button');
-const buttonClose = document.querySelectorAll('.popup__close');
+const buttonsClosePopup = document.querySelectorAll('.popup__close');
 
 const previewModal = document.querySelector('.popup_type_image');
 const previewModalImage = previewModal.querySelector('.popup__image');
@@ -32,7 +32,7 @@ buttonNewCard.addEventListener("click", function () {
   openModal(modalNewCard);
 });
 
-buttonClose.forEach(button => {
+buttonsClosePopup.forEach(button => {
   button.addEventListener("click", function (evt) {
     const modal = evt.target.closest('.popup');
     closeModal(modal);
@@ -53,14 +53,14 @@ const jobInput = document.querySelector('.popup__input_type_description');
 const profileTitle = document.querySelector('.profile__title');
 const profileDescription = document.querySelector('.profile__description');
 
-function handleFormSubmit(evt) {
+function submitEditProfileForm(evt) {
     evt.preventDefault();
     profileTitle.textContent = nameInput.value;
     profileDescription.textContent = jobInput.value;
     closeModal(modalEdit);
 }
 
-formEditProfile.addEventListener('submit', handleFormSubmit);
+formEditProfile.addEventListener('submit', submitEditProfileForm);
 
 // Находим форму в DOM
 const formNewPlace = document.forms["new-place"];

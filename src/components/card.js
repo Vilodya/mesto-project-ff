@@ -1,6 +1,11 @@
+const cardTemplate = document.querySelector('#card-template').content;
+
+function getCardTemplate() {
+  return cardTemplate.querySelector('.card').cloneNode(true);
+}
+
 export function addCard (card, removeCard, handleLike, openPreview) {
-  const cardTemplate = document.querySelector('#card-template').content;
-  const cardNode = cardTemplate.querySelector('.card').cloneNode(true);
+  const cardNode = getCardTemplate();
 
   const cardImage = cardNode.querySelector('.card__image');
   const cardTitle = cardNode.querySelector('.card__title');
