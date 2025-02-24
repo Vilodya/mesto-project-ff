@@ -3,6 +3,7 @@ import './index.css';
 import { openModal, closeModal, closeModalOnOverlay} from './components/modal.js';
 import { addCard, removeCard, handleLike } from './components/card.js';
 import { initialCards } from './components/cards.js';
+import { clearValidation, enableValidation } from './components/validation.js';
 
 // Объявление переменных
 const modalEdit = document.querySelector('.popup_type_edit');
@@ -74,13 +75,18 @@ function createCard(evt){
     openPreview
   );
   cardList.prepend(newCard);
+
+  const form = modalNewCard.querySelector('.popup__form');
+  clearValidation(form, validationConfig);
   evt.target.reset();
   closeModal(modalNewCard);
 }
 
 // Обработчики событий
 buttonEdit.addEventListener("click", function () {
-  // clearValidation(formEditProfile, validationConfig);
+  const form = modalEdit.querySelector('.popup__form');
+  clearValidation(form, validationConfig);
+
   openModal(modalEdit);
 });
 
@@ -109,3 +115,5 @@ initialCards.forEach(card => {
   const cardElement = addCard(card, removeCard, handleLike, openPreview);
   placesList.append(cardElement);
 });
+
+enableValidation(validationConfig);
