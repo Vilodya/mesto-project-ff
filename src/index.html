@@ -38,12 +38,12 @@
       <h3 class="popup__title">Редактировать профиль</h3>
       <form class="popup__form" name="edit-profile" novalidate>
         <label class="popup__form-field">
-          <input type="text" id="name" name="name" class="popup__input popup__input_type_name" placeholder="Имя" minlength="2" pattern="^[a-zA-Z]+$" maxlength="40" required>
-          <span class="name-input-error popup__input-error">Необходимо заполнить данное поле</span>
+          <input type="text" id="name" name="name" class="popup__input popup__input_type_name" placeholder="Имя" minlength="2" pattern="^[a-zA-Z]+$" data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы" maxlength="40" required>
+          <span class="name-input-error popup__error">Необходимо заполнить данное поле</span>
         </label>
         <label class="popup__form-field">
-          <input type="text" id="description" name="description" class="popup__input popup__input_type_description" placeholder="Занятие" pattern="^[a-zA-Z]+$" minlength="2" maxlength="200" required>
-          <span class="description-input-error popup__input-error">Необходимо заполнить данное поле</span>
+          <input type="text" id="description" name="description" class="popup__input popup__input_type_description" placeholder="Занятие" pattern="^[a-zA-Z]+$" data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы" minlength="2" maxlength="200" required>
+          <span class="description-input-error popup__error">Необходимо заполнить данное поле</span>
         </label>
         <button type="submit" class="button popup__button">Сохранить</button>
       </form>
@@ -55,12 +55,12 @@
       <h3 class="popup__title">Новое место</h3>
       <form class="popup__form" name="new-place" novalidate>
         <label class="popup__form-field">
-          <input type="text" id="place-name" name="place-name" class="popup__input popup__input_type_card-name" placeholder="Название" pattern="^[a-zA-Z]+$" minlength="2" maxlength="30" required>
-          <span class="place-name-input-error popup__input-error">Необходимо заполнить данное поле</span>
+          <input type="text" id="place-name" name="place-name" class="popup__input popup__input_type_card-name" placeholder="Название" pattern="^[a-zA-Z]+$" data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы" minlength="2" maxlength="30" required>
+          <span class="place-name-input-error popup__error">Необходимо заполнить данное поле</span>
         </label>
         <label class="popup__form-field">
           <input type="url" id="link" name="link" class="popup__input popup__input_type_url" placeholder="Ссылка на картинку" required>
-          <span class="link-input-error popup__input-error">Необходимо заполнить данное поле</span>
+          <span class="link-input-error popup__error">Необходимо заполнить данное поле</span>
         </label>
         <button type="submit" class="button popup__button">Сохранить</button>
       </form>

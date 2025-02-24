@@ -37,6 +37,16 @@ const cardList = document.querySelector('.places__list');
 // @todo: Вывести карточки на страницу
 const placesList = document.querySelector('.places__list');
 
+// Validation Config
+const validationConfig = {
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_disabled',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'popup__error_visible'
+};
+
 // Функции
 function openPreview(name, link) {
   previewModalImage.src = link;
@@ -70,6 +80,7 @@ function createCard(evt){
 
 // Обработчики событий
 buttonEdit.addEventListener("click", function () {
+  // clearValidation(formEditProfile, validationConfig);
   openModal(modalEdit);
 });
 
