@@ -2,8 +2,8 @@ import './index.css';
 
 import { openModal, closeModal, closeModalOnOverlay} from './components/modal.js';
 import { addCard, removeCard, handleLike } from './components/card.js';
-import { initialCards } from './components/cards.js';
 import { clearValidation, enableValidation } from './components/validation.js';
+import { getUserInfo, getInitialCards, editProfile } from './components/api.js';
 
 // Объявление переменных
 const modalEdit = document.querySelector('.popup_type_edit');
@@ -18,6 +18,7 @@ const previewModal = document.querySelector('.popup_type_image');
 const previewModalImage = previewModal.querySelector('.popup__image');
 const previewModalCaption = previewModal.querySelector('.popup__caption');
 
+const profileImage = document.querySelector('.profile__image');
 const profileTitle = document.querySelector('.profile__title');
 const profileDescription = document.querySelector('.profile__description');
 
@@ -58,9 +59,21 @@ function openPreview(name, link) {
 
 function submitEditProfileForm(evt) {
   evt.preventDefault();
-  profileTitle.textContent = nameInput.value;
-  profileDescription.textContent = jobInput.value;
-  closeModal(modalEdit);
+  const submitButton = evt.target.querySelector('.popup__button');
+  renderLoading(true, submitButton);
+
+  const name = nameInput.value;
+  const about = jobInput.value;
+  editProfile(name, about)
+      .then(data => {
+          profileTitle.textContent = data.name;
+          profileDescription.textContent = data.about;
+          closeModal(modalEdit);
+      })
+      .catch(err => console.log(err))
+      .finally(() => {
+      renderLoading(false, submitButton);
+      })
 }
 
 function createCard(evt){
@@ -76,21 +89,46 @@ function createCard(evt){
   );
   cardList.prepend(newCard);
 
-  const form = modalNewCard.querySelector('.popup__form');
-  clearValidation(form, validationConfig);
+  clearValidation(modalNewCard, validationConfig);
   evt.target.reset();
   closeModal(modalNewCard);
 }
 
+Promise.all([getUserInfo(), getInitialCards()])
+    .then(([userData, cardsData]) => {
+        profileTitle.textContent = userData.name;
+        profileDescription.textContent = userData.about;
+        profileImage.style.backgroundImage = `url(${userData.avatar})`;
+        const userId = userData._id;
+
+        cardsData.forEach(card => {
+            const cardElement = addCard(
+                card,
+                removeCard,
+                handleLike,
+                openPreview
+            );
+            placesList.append(cardElement);
+        });
+    })
+    .catch(err => console.log(`Ошибка загрузки данных: ${err}`));
+
+function renderLoading(isLoading, button) {
+  if (isLoading) {
+    button.textContent = "Сохранение...";
+  } else {
+    button.textContent = "Сохранить";
+  }
+}
+
 // Обработчики событий
 buttonEdit.addEventListener("click", function () {
-  const form = modalEdit.querySelector('.popup__form');
-  clearValidation(form, validationConfig);
-
+  clearValidation(modalEdit, validationConfig);
   openModal(modalEdit);
 });
 
 buttonNewCard.addEventListener("click", function () {
+  clearValidation(modalNewCard, validationConfig);
   openModal(modalNewCard);
 });
 
@@ -108,12 +146,6 @@ modals.forEach(modal => {
 });
 
 formEditProfile.addEventListener('submit', submitEditProfileForm);
-
 formNewPlace.addEventListener('submit', createCard);
-
-initialCards.forEach(card => {
-  const cardElement = addCard(card, removeCard, handleLike, openPreview);
-  placesList.append(cardElement);
-});
 
 enableValidation(validationConfig);
