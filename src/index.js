@@ -3,11 +3,12 @@ import './index.css';
 import { openModal, closeModal, closeModalOnOverlay} from './components/modal.js';
 import { addCard, removeCard, handleLike } from './components/card.js';
 import { clearValidation, enableValidation } from './components/validation.js';
-import { getUserInfo, getInitialCards, editProfile } from './components/api.js';
+import { getUserInfo, getInitialCards, editProfile, changeAvatar } from './components/api.js';
 
 // Объявление переменных
 const modalEdit = document.querySelector('.popup_type_edit');
 const modalNewCard = document.querySelector('.popup_type_new-card');
+const modalAvatar = document.querySelector('.popup_type_avatar');
 const modals = document.querySelectorAll('.popup');
 
 const buttonEdit = document.querySelector('.profile__edit-button');
@@ -34,10 +35,12 @@ const formNewPlace = document.forms["new-place"];
 const cardNameInput = document.querySelector('.popup__input_type_card-name');
 const imageUrlInput = document.querySelector('.popup__input_type_url');
 
-const cardList = document.querySelector('.places__list');
+// Находим форму в DOM
+const formAvatar = document.forms['edit-avatar'];
+const avatarInput = formAvatar.querySelector('.popup__input_type_avatar-link');
 
 // @todo: Вывести карточки на страницу
-const placesList = document.querySelector('.places__list');
+const cardList = document.querySelector('.places__list');
 
 // Validation Config
 const validationConfig = {
@@ -57,26 +60,43 @@ function openPreview(name, link) {
   openModal(previewModal);
 }
 
-function submitEditProfileForm(evt) {
+function handleProfileFormSubmit(evt) {
   evt.preventDefault();
   const submitButton = evt.target.querySelector('.popup__button');
-  renderLoading(true, submitButton);
-
   const name = nameInput.value;
   const about = jobInput.value;
+
+  renderLoading(true, submitButton);
   editProfile(name, about)
       .then(data => {
-          profileTitle.textContent = data.name;
-          profileDescription.textContent = data.about;
-          closeModal(modalEdit);
+        profileTitle.textContent = data.name;
+        profileDescription.textContent = data.about;
+        closeModal(modalEdit);
       })
       .catch(err => console.log(err))
       .finally(() => {
-      renderLoading(false, submitButton);
+        renderLoading(false, submitButton);
       })
 }
 
-function createCard(evt){
+function handleAvatarFormSubmit(evt) {
+  evt.preventDefault();
+  const submitButton = evt.target.querySelector('.popup__button');
+  const avatar = avatarInput.value;
+
+  renderLoading(true, submitButton);
+  changeAvatar(avatar)
+      .then(data => {
+        profileImage.style.backgroundImage = `url(${data.avatar})`;
+        closeModal(modalAvatar);
+      })
+      .catch(err => console.log(err))
+      .finally(() => {
+        renderLoading(false, submitButton);
+      })
+}
+
+function handleCardFormSubmit(evt){
   evt.preventDefault();
   const newCard = addCard(
     {
@@ -87,8 +107,8 @@ function createCard(evt){
     handleLike,
     openPreview
   );
-  cardList.prepend(newCard);
 
+  cardList.prepend(newCard);
   clearValidation(modalNewCard, validationConfig);
   evt.target.reset();
   closeModal(modalNewCard);
@@ -108,7 +128,7 @@ Promise.all([getUserInfo(), getInitialCards()])
                 handleLike,
                 openPreview
             );
-            placesList.append(cardElement);
+            cardList.append(cardElement);
         });
     })
     .catch(err => console.log(`Ошибка загрузки данных: ${err}`));
@@ -145,7 +165,14 @@ modals.forEach(modal => {
   });
 });
 
-formEditProfile.addEventListener('submit', submitEditProfileForm);
-formNewPlace.addEventListener('submit', createCard);
+profileImage.addEventListener('click', function () {
+  openModal(modalAvatar);
+  clearValidation(modalAvatar, validationConfig);
+  avatarInput.value = '';
+});
+
+formEditProfile.addEventListener('submit', handleProfileFormSubmit);
+formNewPlace.addEventListener('submit', handleCardFormSubmit);
+formAvatar.addEventListener('submit', handleAvatarFormSubmit);
 
 enableValidation(validationConfig);

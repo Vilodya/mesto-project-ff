@@ -70,7 +70,7 @@ export const removeLikesCard = (cardId) => {
       .then(checkResponse);
 };
 
-export const changeProfileImage = (avatar) => {
+export const changeAvatar = (avatar) => {
   return fetch(`${config.baseUrl}/users/me/avatar`, {
       method: 'PATCH',
       headers: config.headers,
