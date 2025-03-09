@@ -1,9 +1,9 @@
 import './index.css';
 
 import { openModal, closeModal, closeModalOnOverlay} from './components/modal.js';
-import { addCard, removeCard, handleLike } from './components/card.js';
+import { createCard, removeCard, handleLike } from './components/card.js';
 import { clearValidation, enableValidation } from './components/validation.js';
-import { getUserInfo, getInitialCards, editProfile, changeAvatar } from './components/api.js';
+import { getUserInfo, getInitialCards, editProfile, changeAvatar, addCard, deleteCard } from './components/api.js';
 
 // Объявление переменных
 const modalEdit = document.querySelector('.popup_type_edit');
@@ -96,22 +96,29 @@ function handleAvatarFormSubmit(evt) {
       })
 }
 
-function handleCardFormSubmit(evt){
+function handleCardFormSubmit(evt) {
   evt.preventDefault();
-  const newCard = addCard(
-    {
-      name: cardNameInput.value,
-      link: imageUrlInput.value
-    },
-    removeCard,
-    handleLike,
-    openPreview
-  );
+  const submitButton = evt.target.querySelector('.popup__button');
+  renderLoading(true, submitButton);
 
-  cardList.prepend(newCard);
-  clearValidation(modalNewCard, validationConfig);
-  evt.target.reset();
-  closeModal(modalNewCard);
+  const name = cardNameInput.value;
+  const link = imageUrlInput.value;
+
+  addCard(name, link)
+    .then(cardData => {
+      const newCard = createCard(
+        cardData,
+        removeCard,
+        handleLike,
+        openPreview,
+        cardData.owner._id);
+      cardList.prepend(newCard);
+      clearValidation(modalNewCard, validationConfig);
+      evt.target.reset();
+      closeModal(modalNewCard);
+    })
+    .catch(err => console.log(`Ошибка: ${err}`))
+    .finally(() => renderLoading(false, submitButton));
 }
 
 Promise.all([getUserInfo(), getInitialCards()])
@@ -122,11 +129,12 @@ Promise.all([getUserInfo(), getInitialCards()])
         const userId = userData._id;
 
         cardsData.forEach(card => {
-            const cardElement = addCard(
+            const cardElement = createCard(
                 card,
                 removeCard,
                 handleLike,
-                openPreview
+                openPreview,
+                userId
             );
             cardList.append(cardElement);
         });
@@ -149,6 +157,7 @@ buttonEdit.addEventListener("click", function () {
 
 buttonNewCard.addEventListener("click", function () {
   clearValidation(modalNewCard, validationConfig);
+  formNewPlace.reset();
   openModal(modalNewCard);
 });
 

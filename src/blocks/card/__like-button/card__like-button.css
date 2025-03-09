@@ -24,9 +24,12 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 3px;
 }
 
 .card__like-counter {
   display: inline-block;
   margin: 0;
+  font-size: 13px;
+  line-height: 16px;
 }
