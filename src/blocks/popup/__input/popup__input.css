@@ -1,34 +1,37 @@
 .popup__form-field {
   position: relative;
+  display: block;
+  margin-top: 35px;
+}
+.popup__form-field:focus-visible {
+  outline: 1px solid black;
 }
 
 .popup__input {
   box-sizing: border-box;
   width: 100%;
-  height: 47px;
-  margin-bottom: 10px;
+  height: 30px;
   border: 0;
   border-bottom: 1px solid rgba(0, 0, 0, .2);
-  padding: 10px 0 0;
+  padding: 0;
   font-size: 14px;
-  line-height: 18px;
+  line-height: 14px;
 }
 
 .popup__input_type_error {
   border-bottom: 1px solid #ff0000;
 }
 
-.popup__input:last-of-type {
-  margin-bottom: 0;
-}
-
 .popup__error {
+  position: absolute;
+  z-index: 1;
   display: inline-block;
-  margin-top: 5px;
   opacity: 0;
   color: #ff0000;
   font-size: 12px;
   line-height: 100%;
+  left: 0;
+  top: 35px;
 }
 
 .popup__error_visible {

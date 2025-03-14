@@ -4,6 +4,7 @@ import { openModal, closeModal, closeModalOnOverlay} from './components/modal.js
 import { createCard, removeCard, handleLike } from './components/card.js';
 import { clearValidation, enableValidation } from './components/validation.js';
 import { getUserInfo, getInitialCards, editProfile, changeAvatar, addCard, deleteCard } from './components/api.js';
+import { renderLoading } from './components/utils.js';
 
 // Объявление переменных
 const modalEdit = document.querySelector('.popup_type_edit');
@@ -113,8 +114,8 @@ function handleCardFormSubmit(evt) {
         openPreview,
         cardData.owner._id);
       cardList.prepend(newCard);
-      clearValidation(modalNewCard, validationConfig);
       evt.target.reset();
+      clearValidation(modalNewCard, validationConfig);
       closeModal(modalNewCard);
     })
     .catch(err => console.log(`Ошибка: ${err}`))
@@ -141,23 +142,15 @@ Promise.all([getUserInfo(), getInitialCards()])
     })
     .catch(err => console.log(`Ошибка загрузки данных: ${err}`));
 
-function renderLoading(isLoading, button) {
-  if (isLoading) {
-    button.textContent = "Сохранение...";
-  } else {
-    button.textContent = "Сохранить";
-  }
-}
-
 // Обработчики событий
 buttonEdit.addEventListener("click", function () {
+  nameInput.value = profileTitle.textContent;
+  jobInput.value = profileDescription.textContent;
   clearValidation(modalEdit, validationConfig);
   openModal(modalEdit);
 });
 
 buttonNewCard.addEventListener("click", function () {
-  clearValidation(modalNewCard, validationConfig);
-  formNewPlace.reset();
   openModal(modalNewCard);
 });
 
